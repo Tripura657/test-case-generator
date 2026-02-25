@@ -8,8 +8,14 @@ load_dotenv()
 
 app = FastAPI(title="AI Test Case Generator")
 
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+@app.get("/")
+def read_index():
+    return FileResponse("static/index.html")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 if not GEMINI_API_KEY:
     raise RuntimeError("GEMINI_API_KEY not set")
